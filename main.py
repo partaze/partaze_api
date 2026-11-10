@@ -20,6 +20,10 @@ def home():
 def health():
     return {"status": "ok"}
 
+@app.get("/wake")
+def wake():
+    return {"ok": True}
+
 TMDB_KEY = os.environ.get("TMDB_API_KEY")
 
 @app.get("/api/search")
