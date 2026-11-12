@@ -33,7 +33,7 @@ async def search_shows(q: str):
             "https://api.themoviedb.org/3/search/multi",
             params={"api_key": TMDB_KEY, "query": q, "include_adult": "false"}
         )
-        print("TMDB status:", r.status_code, r.text[:800]) # <- check this in Render Logs
+        print("TMDB status:", r.status_code, r.text[:800])
         data = r.json()
     
     out = []
@@ -42,8 +42,17 @@ async def search_shows(q: str):
             continue
         out.append({
             "name": s.get("name") or s.get("title"),
+            "title": s.get("title") or s.get("name"),
             "description": s.get("overview"),
+            "overview": s.get("overview"),
             "poster": f"https://image.tmdb.org/t/p/w500{s['poster_path']}" if s.get("poster_path") else None,
+            "poster_path": s.get("poster_path"),
             "rating": s.get("vote_average"),
+            "vote_average": s.get("vote_average"),
+            # --- THE FIX: pass these through ---
+            "media_type": s.get("media_type"),
+            "genre_ids": s.get("genre_ids", []),
+            "first_air_date": s.get("first_air_date"),
+            "release_date": s.get("release_date"),
         })
     return out
